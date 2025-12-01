@@ -109,6 +109,9 @@
                     <from>
                         <image>maven:3.9.4-eclipse-temurin-21</image>
                     </from>
+                    <to>
+                        <image>winstyngyen/curemap-config-server:v1</image>
+                    </to>
                     <container>
                         <mainClass>com.generis.Application</mainClass>
                         <ports>
