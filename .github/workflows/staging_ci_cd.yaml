@@ -48,7 +48,7 @@ jobs:
           IMAGE_TAG: ${{secrets.IMAGE_TAG != '' && secrets.IMAGE_TAG || github.sha}}
 
         run: |
-          mvn clean compile jib:build \
+          mvn compile jib:build \
             -Djib.to.image=${{ env.IMAGE_REPO }}:${{env.IMAGE_TAG}} \
             -Djib.to.auth.username=${{ secrets.DOCKER_HUB_USERNAME }} \
             -Djib.to.auth.password=${{ secrets.DOCKER_HUB_TOKEN }}
