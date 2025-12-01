@@ -1,0 +1,27 @@
+server:
+  port: 8050
+
+spring:
+  application:
+    name: curemap-configserver
+
+  profiles:
+#    active: native
+    active: git
+
+  cloud:
+    config:
+      server:
+#        native:
+#          search-locations: "classpath:/config" for native profile
+        git:
+          uri: "https://github.com/Proautotype/curemap-configs.git"
+#          username: ""
+#          password: ""
+          default-label: main
+          timeout: 10
+          clone-on-start: true
+          force-pull: true
+
+encrypt:
+  key: "vO154K::D8+94lqF2w5-"

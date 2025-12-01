@@ -1,0 +1,45 @@
+name: ConfigServer CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+
+jobs:
+
+  build_and_package:
+    runs-on: ubuntu-latest
+    name: "setup and build jar"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup JDK 21 for project
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+          cache: "maven"
+
+      - name: Build with maven
+        run: mvn clean package -DskipTests=true
+
+  build_push_image_to_docker_repository:
+    needs:
+      - build_and_package
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Build and Push Project's Docker Image with Jib to org's repository
+
+        env:
+          IMAGE_REPO: ${{ secrets.DOCKER_HUB_USERNAME }}/curemap_config_server
+          IMAGE_TAG: ${{secrets.IMAGE_TAG != '' && secrets.IMAGE_TAG || github.sha}}
+
+        run: |
+          mvn clean compile jib:build \
+            -Djib.to.image=${{ env.IMAGE_REPO }}:${{env.IMAGE_TAG}} \
+            -Djib.to.auth.username=${{ secrets.DOCKER_HUB_USERNAME }} \
+            -Djib.to.auth.password=${{ secrets.DOCKER_HUB_TOKEN }}
